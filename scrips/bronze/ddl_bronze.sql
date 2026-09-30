@@ -21,10 +21,9 @@
 
 USE bronze;
 
-
--- ============================================================
--- CRM 客户信息
--- ============================================================
+-- =========================================================
+-- CRM: Customer
+-- =========================================================
 
 DROP TABLE IF EXISTS crm_cust_info;
 
@@ -37,113 +36,96 @@ CREATE TABLE crm_cust_info (
     cst_gndr            VARCHAR(50),
     cst_create_date     VARCHAR(50),
 
-    create_date         DATETIME DEFAULT CURRENT_TIMESTAMP
-                        COMMENT '数据进入 Bronze 层的时间',
-
-    source_system       VARCHAR(50)
-                        COMMENT '数据来源系统'
+    create_date         DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
+    source_system       VARCHAR(50) COMMENT '数据来源系统'
 );
 
 
--- ============================================================
--- CRM 产品信息
--- ============================================================
+-- =========================================================
+-- CRM: Product
+-- =========================================================
 
 DROP TABLE IF EXISTS crm_prd_info;
 
 CREATE TABLE crm_prd_info (
     prd_id              VARCHAR(50),
     prd_key             VARCHAR(50),
-    prd_nm              VARCHAR(100),
-    prd_cost            VARCHAR(50),
-    prd_line            VARCHAR(50),
-    prd_start_dt        VARCHAR(50),
-    prd_end_dt          VARCHAR(50),
+    prd_nm               VARCHAR(100),
+    prd_cost             VARCHAR(50),
+    prd_line             VARCHAR(50),
+    prd_start_dt         VARCHAR(50),
+    prd_end_dt           VARCHAR(50),
 
-    create_date         DATETIME DEFAULT CURRENT_TIMESTAMP
-                        COMMENT '数据进入 Bronze 层的时间',
-
-    source_system       VARCHAR(50)
-                        COMMENT '数据来源系统'
+    create_date          DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
+    source_system        VARCHAR(50) COMMENT '数据来源系统'
 );
 
 
--- ============================================================
--- CRM 销售明细
--- ============================================================
+-- =========================================================
+-- CRM: Sales Details
+-- =========================================================
 
 DROP TABLE IF EXISTS crm_sales_details;
 
 CREATE TABLE crm_sales_details (
-    sls_ord_num         VARCHAR(50),
-    sls_prd_key         VARCHAR(50),
-    sls_cust_id         VARCHAR(50),
-    sls_order_dt        VARCHAR(50),
-    sls_ship_dt         VARCHAR(50),
-    sls_due_dt          VARCHAR(50),
-    sls_sales           VARCHAR(50),
-    sls_quantity        VARCHAR(50),
+    sls_ord_num          VARCHAR(50),
+    sls_prd_key          VARCHAR(50),
+    sls_cust_id          VARCHAR(50),
+    sls_order_dt         VARCHAR(50),
+    sls_ship_dt          VARCHAR(50),
+    sls_due_dt           VARCHAR(50),
+    sls_sales            VARCHAR(50),
+    sls_quantity         VARCHAR(50),
+    sls_price            VARCHAR(50),
 
-    create_date         DATETIME DEFAULT CURRENT_TIMESTAMP
-                        COMMENT '数据进入 Bronze 层的时间',
-
-    source_system       VARCHAR(50)
-                        COMMENT '数据来源系统'
+    create_date          DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
+    source_system        VARCHAR(50) COMMENT '数据来源系统'
 );
 
 
--- ============================================================
--- ERP 客户信息
--- ============================================================
+-- =========================================================
+-- ERP: Customer
+-- =========================================================
 
 DROP TABLE IF EXISTS erp_cust_az12;
 
 CREATE TABLE erp_cust_az12 (
-    cid                 VARCHAR(50),
-    bdate               VARCHAR(50),
-    gen                 VARCHAR(50),
+    cid                  VARCHAR(50),
+    bdate                VARCHAR(50),
+    gen                  VARCHAR(50),
 
-    create_date         DATETIME DEFAULT CURRENT_TIMESTAMP
-                        COMMENT '数据进入 Bronze 层的时间',
-
-    source_system       VARCHAR(50)
-                        COMMENT '数据来源系统'
+    create_date          DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
+    source_system        VARCHAR(50) COMMENT '数据来源系统'
 );
 
 
--- ============================================================
--- ERP 地区国家信息
--- ============================================================
+-- =========================================================
+-- ERP: Location
+-- =========================================================
 
 DROP TABLE IF EXISTS erp_loc_a101;
 
 CREATE TABLE erp_loc_a101 (
-    cid                 VARCHAR(50),
-    cntry               VARCHAR(50),
+    cid                  VARCHAR(50),
+    cntry                VARCHAR(50),
 
-    create_date         DATETIME DEFAULT CURRENT_TIMESTAMP
-                        COMMENT '数据进入 Bronze 层的时间',
-
-    source_system       VARCHAR(50)
-                        COMMENT '数据来源系统'
+    create_date          DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
+    source_system        VARCHAR(50) COMMENT '数据来源系统'
 );
 
 
--- ============================================================
--- ERP 产品分类信息
--- ============================================================
+-- =========================================================
+-- ERP: Product Category
+-- =========================================================
 
 DROP TABLE IF EXISTS erp_px_cat_g1v2;
 
 CREATE TABLE erp_px_cat_g1v2 (
-    id                  VARCHAR(50),
-    cat                 VARCHAR(50),
-    subcat              VARCHAR(50),
-    maintenance         VARCHAR(50),
+    id                   VARCHAR(50),
+    cat                  VARCHAR(50),
+    subcat               VARCHAR(50),
+    maintenance          VARCHAR(50),
 
-    create_date         DATETIME DEFAULT CURRENT_TIMESTAMP
-                        COMMENT '数据进入 Bronze 层的时间',
-
-    source_system       VARCHAR(50)
-                        COMMENT '数据来源系统'
+    create_date          DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
+    source_system        VARCHAR(50) COMMENT '数据来源系统'
 );
