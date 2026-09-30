@@ -28,16 +28,16 @@ USE bronze;
 DROP TABLE IF EXISTS crm_cust_info;
 
 CREATE TABLE crm_cust_info (
-    cst_id              VARCHAR(50),
-    cst_key             VARCHAR(50),
-    cst_first_name      VARCHAR(50),
-    cst_last_name       VARCHAR(50),
-    cst_material_stauts VARCHAR(50),
-    cst_gndr            VARCHAR(50),
-    cst_create_date     VARCHAR(50),
+    cst_id               INT,
+    cst_key              VARCHAR(50),
+    cst_first_name       VARCHAR(50),
+    cst_last_name        VARCHAR(50),
+    cst_material_stauts  VARCHAR(50),
+    cst_gndr             VARCHAR(50),
+    cst_create_date      DATE,
 
-    create_date         DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
-    source_system       VARCHAR(50) COMMENT '数据来源系统'
+    create_date          DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
+    source_system        VARCHAR(50) COMMENT '数据来源系统'
 );
 
 
@@ -48,13 +48,13 @@ CREATE TABLE crm_cust_info (
 DROP TABLE IF EXISTS crm_prd_info;
 
 CREATE TABLE crm_prd_info (
-    prd_id              VARCHAR(50),
-    prd_key             VARCHAR(50),
+    prd_id               INT,
+    prd_key              VARCHAR(50),
     prd_nm               VARCHAR(100),
-    prd_cost             VARCHAR(50),
+    prd_cost             DECIMAL(18,2),
     prd_line             VARCHAR(50),
-    prd_start_dt         VARCHAR(50),
-    prd_end_dt           VARCHAR(50),
+    prd_start_dt         DATE,
+    prd_end_dt           DATE,
 
     create_date          DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
     source_system        VARCHAR(50) COMMENT '数据来源系统'
@@ -70,13 +70,13 @@ DROP TABLE IF EXISTS crm_sales_details;
 CREATE TABLE crm_sales_details (
     sls_ord_num          VARCHAR(50),
     sls_prd_key          VARCHAR(50),
-    sls_cust_id          VARCHAR(50),
+    sls_cust_id          INT,
     sls_order_dt         VARCHAR(50),
     sls_ship_dt          VARCHAR(50),
     sls_due_dt           VARCHAR(50),
-    sls_sales            VARCHAR(50),
-    sls_quantity         VARCHAR(50),
-    sls_price            VARCHAR(50),
+    sls_sales            DECIMAL(18,2),
+    sls_quantity         INT,
+    sls_price             DECIMAL(18,2),
 
     create_date          DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
     source_system        VARCHAR(50) COMMENT '数据来源系统'
@@ -91,7 +91,7 @@ DROP TABLE IF EXISTS erp_cust_az12;
 
 CREATE TABLE erp_cust_az12 (
     cid                  VARCHAR(50),
-    bdate                VARCHAR(50),
+    bdate                DATE,
     gen                  VARCHAR(50),
 
     create_date          DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据加载时间',
