@@ -98,6 +98,4 @@ WHERE row_num = 1;
 -- =========================================================
 SELECT '>> silver.crm_cust_info load completed' AS msg;
 
-SELECT *
-FROM silver.crm_cust_info;
 
