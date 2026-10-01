@@ -97,6 +97,3 @@ FROM bronze.crm_sales_details;
 -- =========================================================
 SELECT '>> silver.crm_sales_details load completed' AS msg;
 
-SELECT *
-FROM silver.crm_sales_details;
-
