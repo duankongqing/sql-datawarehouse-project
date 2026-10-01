@@ -92,6 +92,3 @@ FROM bronze.crm_prd_info;
 -- 3. 加载结果校验
 -- =========================================================
 SELECT '>> silver.crm_prd_info load completed' AS msg;
-
-SELECT *
-FROM silver.crm_prd_info;
