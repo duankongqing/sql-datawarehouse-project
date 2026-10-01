@@ -54,5 +54,4 @@ FROM bronze.erp_loc_a101;
 -- =========================================================
 SELECT '>> silver.erp_loc_a101 load completed' AS msg;
 
-SELECT *
-FROM silver.erp_loc_a101;
+
