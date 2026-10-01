@@ -64,5 +64,3 @@ FROM bronze.erp_cust_az12;
 -- =========================================================
 SELECT '>> silver.erp_cust_az12 load completed' AS msg;
 
-SELECT *
-FROM silver.erp_cust_az12;
