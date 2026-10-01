@@ -1,27 +1,30 @@
 /*
 ================================================================================
 脚本名称：proc_load_bronze.sql
-
 功能说明：
-    将 CRM 和 ERP 系统的 CSV 源数据加载至 Bronze 层。
-
+    将 CRM 和 ERP 系统的 CSV 源数据全量加载至 Bronze 层。
 处理流程：
-    Source System -> CSV -> Bronze Layer (使用 NULLIF 安全过滤空字符串)
-
+    CSV 源文件 → 字符串读取 → TRIM 去空格 → NULLIF 空串转NULL → Bronze 表
 加载规则：
-    1. 全量加载。
-    2. 加载前 TRUNCATE 目标表。
-    3. 使用 VARCHAR 接收，并通过 NULLIF 将空串转为 NULL，拒绝隐式污染。
-    4. source_system 在加载时直接补充。
+    1. 全量加载，加载前 TRUNCATE 清空目标表。
+    2. 全部以字符串形式接收，避免隐式类型转换丢失原始数据。
+    3. 使用 NULLIF + TRIM 统一空值语义，将空字符串转为数据库 NULL。
+    4. source_system 加载时直接赋值，标记数据来源。
+    5. 单表执行耗时统计，用于性能观测与链路排查。
+前置条件：
+    1. MySQL 服务端开启 local_infile 参数。
+    2. 客户端连接（DataGrip）勾选 Allow local infile 选项。
+    3. 先执行 ddl_bronze.sql 完成表结构创建。
 ================================================================================
 */
 
 USE bronze;
 
-
 -- =========================================================
--- CRM: Customer
+-- CRM: 客户信息表加载
 -- =========================================================
+SET @cust_start = NOW();
+SELECT '>> Loading bronze.crm_cust_info' AS msg;
 
 TRUNCATE TABLE crm_cust_info;
 
@@ -38,7 +41,7 @@ IGNORE 1 ROWS
     @v_cst_key,
     @v_cst_first_name,
     @v_cst_last_name,
-    @v_cst_material_stauts,
+    @v_cst_marital_status,
     @v_cst_gndr,
     @v_cst_create_date
 )
@@ -47,15 +50,23 @@ SET
     cst_key             = NULLIF(TRIM(@v_cst_key), ''),
     cst_first_name      = NULLIF(TRIM(@v_cst_first_name), ''),
     cst_last_name       = NULLIF(TRIM(@v_cst_last_name), ''),
-    cst_material_stauts = NULLIF(TRIM(@v_cst_material_stauts), ''),
+    cst_marital_status  = NULLIF(TRIM(@v_cst_marital_status), ''),
     cst_gndr            = NULLIF(TRIM(@v_cst_gndr), ''),
     cst_create_date     = NULLIF(TRIM(@v_cst_create_date), ''),
     source_system       = 'CRM';
 
+SET @cust_end = NOW();
+SELECT CONCAT(
+    '>> bronze.crm_cust_info 加载完成，耗时：',
+    TIMESTAMPDIFF(SECOND, @cust_start, @cust_end),
+    ' 秒'
+) AS msg;
 
 -- =========================================================
--- CRM: Product
+-- CRM: 产品信息表加载
 -- =========================================================
+SET @prd_start = NOW();
+SELECT '>> Loading bronze.crm_prd_info' AS msg;
 
 TRUNCATE TABLE crm_prd_info;
 
@@ -86,10 +97,18 @@ SET
     prd_end_dt     = NULLIF(TRIM(@v_prd_end_dt), ''),
     source_system  = 'CRM';
 
+SET @prd_end = NOW();
+SELECT CONCAT(
+    '>> bronze.crm_prd_info 加载完成，耗时：',
+    TIMESTAMPDIFF(SECOND, @prd_start, @prd_end),
+    ' 秒'
+) AS msg;
 
 -- =========================================================
--- CRM: Sales Details
+-- CRM: 销售明细表加载
 -- =========================================================
+SET @sales_start = NOW();
+SELECT '>> Loading bronze.crm_sales_details' AS msg;
 
 TRUNCATE TABLE crm_sales_details;
 
@@ -124,10 +143,18 @@ SET
     sls_price      = NULLIF(TRIM(@v_sls_price), ''),
     source_system  = 'CRM';
 
+SET @sales_end = NOW();
+SELECT CONCAT(
+    '>> bronze.crm_sales_details 加载完成，耗时：',
+    TIMESTAMPDIFF(SECOND, @sales_start, @sales_end),
+    ' 秒'
+) AS msg;
 
 -- =========================================================
--- ERP: Customer
+-- ERP: 客户扩展表加载
 -- =========================================================
+SET @erp_cust_start = NOW();
+SELECT '>> Loading bronze.erp_cust_az12' AS msg;
 
 TRUNCATE TABLE erp_cust_az12;
 
@@ -150,10 +177,18 @@ SET
     gen            = NULLIF(TRIM(@v_gen), ''),
     source_system  = 'ERP';
 
+SET @erp_cust_end = NOW();
+SELECT CONCAT(
+    '>> bronze.erp_cust_az12 加载完成，耗时：',
+    TIMESTAMPDIFF(SECOND, @erp_cust_start, @erp_cust_end),
+    ' 秒'
+) AS msg;
 
 -- =========================================================
--- ERP: Location
+-- ERP: 地理位置表加载
 -- =========================================================
+SET @erp_loc_start = NOW();
+SELECT '>> Loading bronze.erp_loc_a101' AS msg;
 
 TRUNCATE TABLE erp_loc_a101;
 
@@ -174,10 +209,18 @@ SET
     cntry          = NULLIF(TRIM(@v_cntry), ''),
     source_system  = 'ERP';
 
+SET @erp_loc_end = NOW();
+SELECT CONCAT(
+    '>> bronze.erp_loc_a101 加载完成，耗时：',
+    TIMESTAMPDIFF(SECOND, @erp_loc_start, @erp_loc_end),
+    ' 秒'
+) AS msg;
 
 -- =========================================================
--- ERP: Product Category
+-- ERP: 产品类别表加载
 -- =========================================================
+SET @erp_cat_start = NOW();
+SELECT '>> Loading bronze.erp_px_cat_g1v2' AS msg;
 
 TRUNCATE TABLE erp_px_cat_g1v2;
 
@@ -201,3 +244,13 @@ SET
     subcat         = NULLIF(TRIM(@v_subcat), ''),
     maintenance    = NULLIF(TRIM(@v_maintenance), ''),
     source_system  = 'ERP';
+
+SET @erp_cat_end = NOW();
+SELECT CONCAT(
+    '>> bronze.erp_px_cat_g1v2 加载完成，耗时：',
+    TIMESTAMPDIFF(SECOND, @erp_cat_start, @erp_cat_end),
+    ' 秒'
+) AS msg;
+
+-- 全部加载完成
+SELECT '========== Bronze 层全部表加载完成 ==========' AS msg;
